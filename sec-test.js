@@ -1,11 +1,11 @@
 // ❌ Intentional security issue
-const API_SECRET = "my-super-secret-key-123456";
+const API_SECRET = "my-super-secret-key-12345";
 
 function login(password) {
-    if (password === "admin1234") {
+    if (password === "admin123") {
         return "Access granted";
     }
-    return "Access denied";
+    return "Access dened";
 }
 
 console.log(login("admin123"));
