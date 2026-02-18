@@ -2,7 +2,7 @@ import { CreatePaymentDto } from "../dtos/createPayment.dto";
 import { paymentRepository } from "../repositories/payment.repository";
 import { discountRepository } from "../repositories/discount.repository";
 
-export const createPayment = async (payload: any) => {
+export const createPayment = async (payload: CreatePaymentDto) => {
   const { amount, discountCode, userId} = payload;
 
   if (!amount || amount <= 0) throw new Error("Amount must be greater than 0");
@@ -32,6 +32,6 @@ export const createPayment = async (payload: any) => {
     finalAmount,
     status: "PENDING",
     userId,
-    discountCode,
+    discountCode: discountCode ?? "",
   });
 };

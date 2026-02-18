@@ -4,5 +4,5 @@ export interface Payment {
   finalAmount: number;
   userId: string;
   status: "PENDING" | "PAID";
-  discountCode: string;
+  discountCode?: string;
 }
