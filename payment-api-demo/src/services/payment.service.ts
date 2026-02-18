@@ -2,8 +2,8 @@ import { CreatePaymentDto } from "../dtos/createPayment.dto";
 import { paymentRepository } from "../repositories/payment.repository";
 import { discountRepository } from "../repositories/discount.repository";
 
-export const createPayment = async (payload: any) => { // intentional 'any'
-  const { amount, discountCode } = payload;
+export const createPayment = async (payload: CreatePaymentDto) => {
+  const { amount, discountCode, userId} = payload;
 
   if (!amount || amount <= 0) throw new Error("Amount must be greater than 0");
 
@@ -15,15 +15,23 @@ export const createPayment = async (payload: any) => { // intentional 'any'
     if (!discount) throw new Error("Invalid discount code");
     if (discount.expiresAt < new Date()) throw new Error("Discount expired");
 
-    // Floating point arithmetic intentional
-    finalAmount = amount - (amount * discount.percentage) / 100;
+    const alreadyUsed = await paymentRepository.exists({
+      userId,
+      discountCode
+    });
 
-    if (finalAmount < 0) finalAmount = 0;
+    if (alreadyUsed) {
+      throw new Error("Discount code already used by this user");
+    }
+
+    finalAmount = amount - (amount * discount.percentage) / 100;
   }
 
   return await paymentRepository.create({
     amount,
     finalAmount,
     status: "PENDING",
+    userId,
+    discountCode: discountCode ?? "",
   });
 };

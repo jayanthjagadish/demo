@@ -13,4 +13,10 @@ export const paymentRepository = {
     payments.push(payment);
     return payment;
   },
+  exists: async ({ userId, discountCode }: { userId: string, discountCode: string }) => {
+    const payment = payments.find(
+      (p) => p.userId === userId && p.discountCode === discountCode
+    );
+    return !!payment; // returns true if already used
+  }
 };
